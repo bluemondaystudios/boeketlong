@@ -1,0 +1,226 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { site, rooms, whatsappLink, formatRand } from '../data/site';
+---
+
+<Base
+  title="Contact & Bookings"
+  description={`Book a room at ${site.name}: call ${site.phones[0].display}, WhatsApp ${site.phones[1].display} or email ${site.email}. ${site.address.street}, ${site.address.town}.`}
+>
+  <PageHero eyebrow="Contact & bookings" title="Book your stay" lead="Send us your dates and we'll confirm availability. WhatsApp is usually the quickest way to reach us." />
+
+  <section class="section">
+    <div class="container layout">
+      <div class="card form-card" id="enquire">
+        <h2>Booking enquiry</h2>
+        <p class="hint">Fill this in and send it to us on WhatsApp or by email. Nothing is booked until we confirm.</p>
+        <form id="enquiry" action={`mailto:${site.email}`} method="post" enctype="text/plain">
+          <div class="row">
+            <label>Your name <input name="name" autocomplete="name" required /></label>
+            <label>Phone <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required /></label>
+          </div>
+          <label
+            >Room
+            <select name="room">
+              <option value="">Not sure yet</option>
+              {rooms.map((r) => <option value={r.slug}>{r.name} (from {formatRand(r.from)})</option>)}
+            </select>
+          </label>
+          <div class="row three">
+            <label>Check-in <input name="checkin" type="date" required /></label>
+            <label>Check-out <input name="checkout" type="date" required /></label>
+            <label>Guests <input name="guests" type="number" min="1" max="20" value="2" inputmode="numeric" /></label>
+          </div>
+          <label class="check"><input name="breakfast" type="checkbox" /> Add breakfast</label>
+          <label>Anything else? <textarea name="message" rows="3"></textarea></label>
+          <div class="btn-row">
+            <button class="btn btn-whatsapp" type="submit" value="whatsapp"><Icon name="whatsapp" size={18} /> Send on WhatsApp</button>
+            <button class="btn btn-dark" type="submit" value="email"><Icon name="mail" size={18} /> Send by email</button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="direct">
+        <h2>Or contact us directly</h2>
+        <ul>
+          {
+            site.phones.map((p) => (
+              <li>
+                <a href={`tel:${p.tel}`}>
+                  <Icon name="phone" />
+                  <span>
+                    <strong>{p.display}</strong>
+                    <small>{p.label}</small>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href={whatsappLink()} rel="noopener"><Icon name="whatsapp" /><span><strong>WhatsApp</strong><small>{site.phones[1].display}</small></span></a>
+          </li>
+          <li>
+            <a href={`mailto:${site.email}`}><Icon name="mail" /><span><strong>{site.email}</strong><small>Email</small></span></a>
+          </li>
+          <li>
+            <a href={site.mapsUrl} target="_blank" rel="noopener"
+              ><Icon name="pin" /><span
+                ><strong>{site.address.street}</strong><small>{site.address.town}, {site.address.postalCode}, Limpopo · Get directions</small></span
+              ></a
+            >
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { site, rooms } from '../data/site';
+
+  const form = document.querySelector<HTMLFormElement>('#enquiry')!;
+  const checkin = form.elements.namedItem('checkin') as HTMLInputElement;
+  const checkout = form.elements.namedItem('checkout') as HTMLInputElement;
+
+  // Pre-select the room when arriving from a room page (?room=slug).
+  const wanted = new URLSearchParams(location.search).get('room');
+  if (wanted) (form.elements.namedItem('room') as HTMLSelectElement).value = wanted;
+
+  const today = new Date().toISOString().slice(0, 10);
+  checkin.min = today;
+  checkin.addEventListener('change', () => {
+    checkout.min = checkin.value;
+    if (checkout.value && checkout.value <= checkin.value) checkout.value = '';
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const room = rooms.find((r) => r.slug === data.get('room'))?.name ?? 'Not sure yet';
+    const lines = [
+      'Hi Boeketlong Lodge, I would like to make a booking.',
+      `Name: ${data.get('name')}`,
+      `Phone: ${data.get('phone')}`,
+      `Room: ${room}`,
+      `Check-in: ${data.get('checkin')}`,
+      `Check-out: ${data.get('checkout')}`,
+      `Guests: ${data.get('guests')}`,
+      `Breakfast: ${data.get('breakfast') ? 'Yes' : 'No'}`,
+    ];
+    const message = String(data.get('message') ?? '').trim();
+    if (message) lines.push(`Notes: ${message}`);
+    const text = lines.join('\n');
+
+    const via = (event.submitter as HTMLButtonElement | null)?.value;
+    if (via === 'email') {
+      location.href = `mailto:${site.email}?subject=${encodeURIComponent('Booking enquiry')}&body=${encodeURIComponent(text)}`;
+    } else {
+      window.open(`https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    }
+  });
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    gap: clamp(28px, 5vw, 56px);
+    align-items: start;
+  }
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: 1.5fr 1fr;
+    }
+  }
+  .form-card {
+    padding: clamp(20px, 4vw, 36px);
+    scroll-margin-top: 90px;
+  }
+  .hint {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  form {
+    display: grid;
+    gap: 16px;
+  }
+  .row {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 600px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+    .row.three {
+      grid-template-columns: 1fr 1fr 0.7fr;
+    }
+  }
+  label {
+    display: grid;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  input,
+  select,
+  textarea {
+    font: inherit;
+    font-weight: 400;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--cream);
+    color: var(--ink);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(192 159 43 / 0.25);
+  }
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .check input {
+    width: 20px;
+    min-height: 20px;
+    accent-color: var(--gold-dark);
+  }
+  .direct ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .direct a {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .direct a:hover strong {
+    color: var(--gold-dark);
+  }
+  .direct :global(.icon) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--gold-dark);
+  }
+  .direct span {
+    display: grid;
+  }
+  .direct small {
+    color: var(--ink-soft);
+  }
+</style>

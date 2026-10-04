@@ -1,0 +1,64 @@
+---
+import Icon from './Icon.astro';
+import { facilities } from '../data/site';
+---
+
+<ul class="facilities">
+  {
+    facilities.map((f) => (
+      <li class="card">
+        <span class="badge">
+          <Icon name={f.icon} size={26} />
+        </span>
+        <h3>{f.page ? <a href={`/facilities/${f.slug}/`}>{f.name}</a> : f.name}</h3>
+        <p>{f.blurb}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .facilities {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  }
+  li {
+    position: relative;
+    padding: 24px;
+  }
+  .badge {
+    display: inline-grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--sand);
+    color: var(--gold-dark);
+    margin-bottom: 14px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.35em;
+  }
+  h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  li:has(a):hover {
+    outline: 2px solid var(--gold);
+  }
+  p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+</style>

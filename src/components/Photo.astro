@@ -1,0 +1,81 @@
+---
+// Renders an optimised photo from src/assets/photos/<name>.(jpg|jpeg|png|webp).
+// Until the lodge's photos are added, a styled placeholder is shown instead,
+// labelled with the filename it is waiting for.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  name: string;
+  alt: string;
+  widths?: number[];
+  sizes?: string;
+  priority?: boolean;
+  class?: string;
+  aspect?: string;
+}
+
+const {
+  name,
+  alt,
+  widths = [480, 800, 1200, 1600],
+  sizes = '100vw',
+  priority = false,
+  class: className,
+  aspect = '3 / 2',
+} = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/photos/*.{jpg,jpeg,png,webp,avif}',
+);
+const key = Object.keys(files).find((path) => path.replace(/^.*\/|\.[^.]+$/g, '') === name);
+const src = key ? (await files[key]()).default : undefined;
+---
+
+{
+  src ? (
+    <Image
+      src={src}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      format="webp"
+      quality={72}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      class:list={['photo', className]}
+      style={`aspect-ratio: ${aspect}`}
+    />
+  ) : (
+    <div
+      class:list={['photo', 'photo-placeholder', className]}
+      style={`aspect-ratio: ${aspect}`}
+      role="img"
+      aria-label={alt}
+    >
+      <span>{name}.jpg</span>
+    </div>
+  )
+}
+
+<style>
+  .photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .photo-placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 30% 20%, rgb(192 159 43 / 0.35), transparent 60%),
+      linear-gradient(135deg, #2d2a24, #4a3f2a);
+    color: rgb(255 255 255 / 0.55);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    overflow-wrap: anywhere;
+    text-align: center;
+    padding: 8px;
+  }
+</style>

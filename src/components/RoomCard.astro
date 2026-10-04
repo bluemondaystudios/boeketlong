@@ -1,0 +1,93 @@
+---
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import { formatRand, type Room } from '../data/site';
+
+interface Props {
+  room: Room;
+}
+
+const { room } = Astro.props;
+---
+
+<article class="card room">
+  <a href={`/accommodation/${room.slug}/`} class="media" tabindex="-1" aria-hidden="true">
+    <Photo name={room.slug} alt="" sizes="(min-width: 960px) 360px, (min-width: 640px) 50vw, 100vw" />
+  </a>
+  <div class="body">
+    <h3><a href={`/accommodation/${room.slug}/`}>{room.name}</a></h3>
+    <ul class="facts">
+      <li><Icon name="bed" size={18} /> {room.beds}</li>
+      <li><Icon name="users" size={18} /> Sleeps {room.sleeps}</li>
+      <li>
+        <Icon name="coffee" size={18} />
+        {room.breakfastIncluded ? 'Breakfast included' : `With breakfast ${formatRand(room.withBreakfast!)}`}
+      </li>
+    </ul>
+    <p class="price"><span>from</span> <strong>{formatRand(room.from)}</strong> <span>/ night</span></p>
+  </div>
+</article>
+
+<style>
+  .room {
+    display: flex;
+    flex-direction: column;
+  }
+  .media {
+    display: block;
+    overflow: hidden;
+  }
+  .media :global(.photo) {
+    transition: transform 0.4s;
+  }
+  .room:hover .media :global(.photo) {
+    transform: scale(1.04);
+  }
+  .body {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  h3 a::after {
+    /* Whole card is clickable via the title link. */
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .room {
+    position: relative;
+  }
+  .facts {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .facts li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .facts :global(.icon) {
+    color: var(--gold-dark);
+  }
+  .price {
+    margin: auto 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .price strong {
+    color: var(--ink);
+    font-size: 1.5rem;
+  }
+</style>

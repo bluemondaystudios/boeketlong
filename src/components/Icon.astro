@@ -1,0 +1,52 @@
+---
+// Small inline SVG icon set (stroke icons, 24px grid). Inline SVG avoids
+// shipping an icon font.
+interface Props {
+  name: keyof typeof paths;
+  size?: number;
+  class?: string;
+}
+
+const paths = {
+  phone:
+    '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  whatsapp:
+    '<path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 8.5 10.5 8l1 2.2-1 .9a5 5 0 0 0 2.4 2.4l.9-1 2.2 1-.5 1.5A6.5 6.5 0 0 1 9 8.5z"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  facebook: '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  bed: '<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.5"/>',
+  users:
+    '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5a3 3 0 0 1 0 6M18 14a6 6 0 0 1 3 6"/>',
+  coffee: '<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9zM17 10h1a3 3 0 0 1 0 6h-1M8 3v3M12 3v3"/>',
+  check: '<path d="m5 12 5 5 9-10"/>',
+  conference:
+    '<rect x="3" y="4" width="18" height="11" rx="1"/><path d="M12 15v3M8 21l4-3 4 3"/>',
+  spa: '<path d="M12 21c-5 0-8-3-8-8 4 0 7 2 8 5 1-3 4-5 8-5 0 5-3 8-8 8z"/><path d="M12 18c-2-3-2-8 0-13 2 5 2 10 0 13z"/>',
+  salon: '<circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8 16 19 4M16 16 5 4"/>',
+  gym: '<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
+  pool: '<path d="M3 18c2 0 2-1.5 4.5-1.5S9.5 18 12 18s2.5-1.5 4.5-1.5S19 18 21 18"/><path d="M8 15V6a2 2 0 0 1 4 0M16 15V6a2 2 0 0 0-4 0M8 9h8M8 12h8"/>',
+  jacuzzi:
+    '<path d="M3 13h18v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3zM7 20l-1 2M17 20l1 2"/><path d="M8 4c-1 1.5 1 2.5 0 4M12 4c-1 1.5 1 2.5 0 4M16 4c-1 1.5 1 2.5 0 4"/>',
+  bar: '<path d="M5 4h14l-7 8-7-8zM12 12v7M8 20h8"/>',
+} as const;
+
+const { name, size = 20, class: className } = Astro.props;
+---
+
+<svg
+  class:list={['icon', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.8"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={paths[name]}
+/>

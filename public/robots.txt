@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.boeketlong.co.za/sitemap-index.xml

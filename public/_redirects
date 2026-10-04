@@ -1,0 +1,19 @@
+# Old CMS URLs -> new pages (keeps Google rankings and old links working).
+/index.php                           /                                    301
+/about.html                          /about/                              301
+/accommodation.html                  /accommodation/                      301
+/facilities/conference-centre.html   /facilities/conference-centre/       301
+/facilities/beauty-spa.html          /facilities/beauty-spa/              301
+/facilities/salon.html               /facilities/salon/                   301
+/facilities/gym.html                 /facilities/gym/                     301
+/Gallery.html                        /gallery/                            301
+/gallery.html                        /gallery/                            301
+/contact-us.html                     /contact/                            301
+/privacy.html                        /privacy/                            301
+/disclaimer.html                     /terms/                              301
+/rooms/Executive.html                /accommodation/presidential-suite/   301
+/rooms/Luxury-Suite.html             /accommodation/luxury-suite/         301
+/rooms/Deluxe-Ro.html                /accommodation/deluxe-room/          301
+/rooms/Standard.html                 /accommodation/standard-room/        301
+/rooms/Family-Suite.html             /accommodation/family-suite/         301
+/portfolio/Entry-Roo.html            /accommodation/economy-room/         301

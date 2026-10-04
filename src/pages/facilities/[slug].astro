@@ -1,0 +1,61 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import { facilityPages } from '../../data/facility-pages';
+import { site, whatsappLink } from '../../data/site';
+
+export const getStaticPaths = (() =>
+  Object.entries(facilityPages).map(([slug, page]) => ({ params: { slug }, props: { slug, page } }))) satisfies GetStaticPaths;
+
+const { slug, page } = Astro.props as { slug: string; page: (typeof facilityPages)[string] };
+---
+
+<Base title={page.title} description={`${page.title} at ${site.name}, Jane Furse. ${page.lead}`}>
+  <PageHero eyebrow="Facilities" title={page.title} lead={page.lead} />
+  <section class="section">
+    <div class="container split">
+      <div class="prose">
+        {page.body.map((p) => <p>{p}</p>)}
+        <div class="btn-row">
+          <a class="btn btn-whatsapp" href={whatsappLink(`Hi Boeketlong Lodge, ${page.cta}`)} rel="noopener">
+            <Icon name="whatsapp" size={18} /> WhatsApp us
+          </a>
+          <a class="btn btn-dark" href={`tel:${site.phones[0].tel}`}><Icon name="phone" size={18} /> Call</a>
+          <a class="btn btn-ghost" href={`mailto:${site.email}?subject=${encodeURIComponent(page.title)}`}>
+            <Icon name="mail" size={18} /> Email
+          </a>
+        </div>
+        <p class="back"><a href="/facilities/">← All facilities</a></p>
+      </div>
+      <Photo name={slug} alt={page.title} sizes="(min-width: 900px) 560px, 100vw" priority class="rounded" aspect="4 / 3" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .split :global(.rounded) {
+    border-radius: var(--radius);
+  }
+  .btn-row {
+    margin-top: 1.5rem;
+  }
+  .btn-ghost {
+    color: var(--ink);
+  }
+  .back {
+    margin-top: 2rem;
+  }
+</style>

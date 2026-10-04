@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+---
+
+<Base title="Terms" description={`Terms of use for the ${site.name} website.`}>
+  <PageHero title="Terms of use" />
+  <section class="section">
+    <div class="container prose">
+      <!-- TODO(lodge): add booking terms (deposit, cancellation, check-in/out times) once confirmed. -->
+      <h2>Rates and availability</h2>
+      <p>
+        Rates shown on this website are per room, per night, in South African rand. They are a guide and may change.
+        Your rate and booking are only confirmed once we have confirmed them with you directly.
+      </p>
+      <h2>Enquiries</h2>
+      <p>
+        Sending an enquiry through this website, WhatsApp or email does not guarantee a booking. We will reply to
+        confirm availability, the rate and any deposit required.
+      </p>
+      <h2>Website content</h2>
+      <p>
+        We try to keep the information on this website accurate, but it is provided as is. Photos and text are the
+        property of {site.name} and may not be reused without permission.
+      </p>
+      <p>Questions? Email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    </div>
+  </section>
+</Base>

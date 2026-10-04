@@ -1,0 +1,55 @@
+---
+// Thumb-reach booking bar, shown on phones only.
+import Icon from './Icon.astro';
+import { site, whatsappLink } from '../data/site';
+---
+
+<div class="contact-bar" role="region" aria-label="Quick contact">
+  <a href={`tel:${site.phones[0].tel}`}><Icon name="phone" /> Call</a>
+  <a href={whatsappLink('Hi Boeketlong Lodge, I would like to make a booking.')} rel="noopener"
+    ><Icon name="whatsapp" /> WhatsApp</a
+  >
+  <a class="book" href="/contact/#enquire"><Icon name="bed" /> Book</a>
+</div>
+
+<style>
+  .contact-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--ink);
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .contact-bar a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 56px;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+  .contact-bar a + a {
+    border-left: 1px solid rgb(255 255 255 / 0.1);
+  }
+  .contact-bar .book {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  :global(:root) {
+    --bar-h: calc(56px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 900px) {
+    .contact-bar {
+      display: none;
+    }
+    :global(:root) {
+      --bar-h: 0px;
+    }
+  }
+</style>

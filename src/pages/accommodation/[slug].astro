@@ -1,0 +1,146 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import RoomCard from '../../components/RoomCard.astro';
+import { rooms, site, formatRand, whatsappLink, type Room } from '../../data/site';
+
+export const getStaticPaths = (() => rooms.map((room) => ({ params: { slug: room.slug }, props: { room } }))) satisfies GetStaticPaths;
+
+const { room } = Astro.props as { room: Room };
+const others = rooms.filter((r) => r.slug !== room.slug).slice(0, 3);
+const enquiry = `Hi Boeketlong Lodge, I'd like to book the ${room.name}. Check-in: ___ Check-out: ___ Guests: ___`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HotelRoom',
+  name: room.name,
+  description: room.summary,
+  bed: room.beds,
+  occupancy: { '@type': 'QuantitativeValue', maxValue: room.sleeps },
+  containedInPlace: { '@id': `${site.url}/#lodge` },
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'ZAR',
+    price: room.from,
+    priceSpecification: { '@type': 'UnitPriceSpecification', price: room.from, priceCurrency: 'ZAR', unitText: 'night' },
+  },
+};
+---
+
+<Base
+  title={`${room.name} from ${formatRand(room.from)}`}
+  description={`${room.name} at ${site.name}, Jane Furse: ${room.beds}, sleeps ${room.sleeps}. From ${formatRand(room.from)} per night.`}
+  schema={[schema]}
+>
+  <section class="section">
+    <div class="container room">
+      <div class="gallery">
+        <Photo name={room.slug} alt={room.name} sizes="(min-width: 960px) 640px, 100vw" priority class="main" />
+        <div class="thumbs">
+          <Photo name={`${room.slug}-2`} alt={`${room.name}, another view`} sizes="(min-width: 960px) 320px, 50vw" />
+          <Photo name={`${room.slug}-3`} alt={`${room.name}, detail`} sizes="(min-width: 960px) 320px, 50vw" />
+        </div>
+      </div>
+
+      <div class="details">
+        <a class="back" href="/accommodation/">← All rooms</a>
+        <h1>{room.name}</h1>
+        <p class="lead">{room.summary}</p>
+
+        <ul class="facts">
+          <li><Icon name="bed" /> {room.beds}</li>
+          <li><Icon name="users" /> Sleeps {room.sleeps}</li>
+          {room.highlights.filter((h) => !/bed|sleeps/i.test(h)).map((h) => <li><Icon name="check" /> {h}</li>)}
+        </ul>
+
+        <div class="card price-box">
+          <p class="price"><span>from</span> <strong>{formatRand(room.from)}</strong> <span>/ night</span></p>
+          <p class="sub">
+            {room.breakfastIncluded ? 'Breakfast for two included' : `${formatRand(room.withBreakfast!)} / night with breakfast`}
+          </p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href={`/contact/?room=${room.slug}#enquire`}>Book this room</a>
+            <a class="btn btn-whatsapp" href={whatsappLink(enquiry)} rel="noopener"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+          </div>
+          <p class="call">Or call <a href={`tel:${site.phones[0].tel}`}>{site.phones[0].display}</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-sand">
+    <div class="container">
+      <h2>Other rooms</h2>
+      <div class="grid grid-3">
+        {others.map((r) => <RoomCard room={r} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .room {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 56px);
+  }
+  @media (min-width: 960px) {
+    .room {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+  .gallery {
+    display: grid;
+    gap: 12px;
+  }
+  .gallery :global(.photo) {
+    border-radius: var(--radius);
+  }
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .back {
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  .facts {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: grid;
+    gap: 10px;
+  }
+  .facts li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .facts :global(.icon) {
+    color: var(--gold-dark);
+  }
+  .price-box {
+    padding: 24px;
+  }
+  .price {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .price strong {
+    font-size: 2rem;
+    color: var(--ink);
+  }
+  .sub {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .call {
+    margin: 14px 0 0;
+    font-size: 0.95rem;
+  }
+</style>

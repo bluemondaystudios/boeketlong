@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="About Us"
+  description={`${site.name} opened in ${site.history.opened} as ${site.history.previousName} and became a lodge in ${site.history.convertedToLodge}. Find us in Mogoroane, Ga-Moloi, Jane Furse.`}
+>
+  <PageHero eyebrow="About us" title="Our story" lead="From a local pub to one of Sekhukhune's most welcoming lodges." />
+  <section class="section">
+    <div class="container split">
+      <div class="prose">
+        <p>
+          We opened in {site.history.opened} as {site.history.previousName}. In {site.history.convertedToLodge} we
+          became Boeketlong Lodge: a lodge and pub at the centre of Makhuduthamaga, in the famous Sekhukhune
+          lands.
+        </p>
+        <p>
+          Guests come for business, family visits, functions and time away. They stay in elegant, contemporary
+          rooms and enjoy the pool, spa, salon, gym, bar and restaurant without leaving the lodge.
+        </p>
+        <p>
+          A personal, handwritten note of welcome is how we greet our guests, and it says a lot about the way
+          we run the lodge: every guest should feel at home.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/accommodation/">See our rooms</a>
+          <a class="btn btn-ghost" href="/contact/">Contact us</a>
+        </div>
+      </div>
+      <Photo name="about" alt="Boeketlong Lodge" sizes="(min-width: 900px) 560px, 100vw" priority class="rounded" aspect="4 / 5" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+  .split :global(.rounded) {
+    border-radius: var(--radius);
+  }
+  .btn-row {
+    margin-top: 1.5rem;
+  }
+  .btn-ghost {
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,157 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const links = [
+  { href: '/accommodation/', label: 'Accommodation' },
+  { href: '/facilities/', label: 'Facilities' },
+  { href: '/gallery/', label: 'Gallery' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="/" aria-label={`${site.name} home`}>
+      <span class="brand-name">Boeketlong</span>
+      <span class="brand-sub">Lodge</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main">
+      {
+        links.map((l) => (
+          <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+            {l.label}
+          </a>
+        ))
+      }
+      <a class="btn btn-primary" href="/contact/#enquire">Book now</a>
+    </nav>
+
+    <details class="nav-mobile">
+      <summary aria-label="Menu">
+        <span class="open"><Icon name="menu" size={26} /></span>
+        <span class="shut"><Icon name="close" size={26} /></span>
+      </summary>
+      <nav aria-label="Main">
+        <a href="/">Home</a>
+        {
+          links.map((l) => (
+            <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+              {l.label}
+            </a>
+          ))
+        }
+        <a class="btn btn-primary" href="/contact/#enquire">Book now</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(31 27 20 / 0.96);
+    color: var(--white);
+    backdrop-filter: blur(8px);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 68px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .brand-name {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .brand-sub {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .nav-desktop {
+    display: none;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav-desktop a:not(.btn),
+  .nav-mobile nav a:not(.btn) {
+    color: rgb(255 255 255 / 0.85);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .nav-desktop a:not(.btn):hover,
+  [aria-current='page'] {
+    color: var(--gold) !important;
+  }
+  .nav-desktop .btn {
+    min-height: 42px;
+    padding-block: 0.45em;
+  }
+
+  .nav-mobile summary {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-right: -10px;
+  }
+  .nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  .nav-mobile .shut,
+  .nav-mobile[open] .open {
+    display: none;
+  }
+  .nav-mobile[open] .shut {
+    display: block;
+  }
+  .nav-mobile nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px var(--gutter) 24px;
+    background: var(--ink);
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+  }
+  .nav-mobile nav a:not(.btn) {
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .nav-mobile nav .btn {
+    margin-top: 16px;
+  }
+
+  @media (min-width: 900px) {
+    .nav-desktop {
+      display: flex;
+    }
+    .nav-mobile {
+      display: none;
+    }
+  }
+</style>

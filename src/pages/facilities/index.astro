@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import FacilityGrid from '../../components/FacilityGrid.astro';
+import { whatsappLink } from '../../data/site';
+---
+
+<Base
+  title="Facilities"
+  description="Conference centre, beauty spa, salon, gym, pool and water park, jacuzzi, bar lounge and restaurant at Boeketlong Lodge, Jane Furse."
+>
+  <PageHero
+    eyebrow="Facilities"
+    title="More than a place to sleep"
+    lead="Work, relax, eat and celebrate without leaving the lodge."
+  />
+  <section class="section">
+    <div class="container">
+      <FacilityGrid />
+      <p class="more">
+        Have a question about a facility? <a href={whatsappLink('Hi Boeketlong Lodge, I have a question about your facilities.')} rel="noopener">WhatsApp us</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .more {
+    margin-top: 32px;
+    color: var(--ink-soft);
+  }
+</style>
