@@ -1,38 +1,64 @@
 ---
+import { Image } from 'astro:assets';
 import { url } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import Photo from '../components/Photo.astro';
 import RoomCard from '../components/RoomCard.astro';
 import FacilityGrid from '../components/FacilityGrid.astro';
+import BookingBar from '../components/BookingBar.astro';
 import Icon from '../components/Icon.astro';
-import { site, rooms, whatsappLink, formatRand } from '../data/site';
+import crest from '../assets/brand/crest.png';
+import { site, rooms, facilities, whatsappLink } from '../data/site';
 
 const cheapest = Math.min(...rooms.map((r) => r.from));
+const stats = [
+  { value: site.history.opened, count: false, prefix: '', label: 'Welcoming guests since' },
+  { value: rooms.length, count: true, prefix: '', label: 'Room & suite types' },
+  { value: cheapest, count: true, prefix: 'R', label: 'Rooms from, per night' },
+  { value: facilities.length, count: true, prefix: '', label: 'On-site facilities' },
+];
 ---
 
-<Base title={site.name}>
+<Base title={site.name} overlayHeader>
   <section class="hero">
-    <Photo name="hero" alt="The reception lounge at Boeketlong Lodge" sizes="100vw" widths={[640, 960, 1440, 1920]} priority aspect="auto" class="hero-img" />
+    <div class="hero-media">
+      <Photo name="hero" alt="The reception lounge at Boeketlong Lodge" sizes="100vw" widths={[640, 960, 1440, 1920]} priority aspect="auto" class="hero-img" />
+    </div>
     <div class="hero-shade"></div>
     <div class="container hero-content">
-      <span class="eyebrow">Jane Furse · Sekhukhune · Limpopo</span>
-      <h1>Make yourself at home</h1>
-      <p class="lead">
+      <span class="eyebrow rise" style="--d: 0">Jane Furse · Sekhukhune · Limpopo</span>
+      <h1 class="rise" style="--d: 1">Make yourself <em>at home</em></h1>
+      <p class="lead rise" style="--d: 2">
         Elegant rooms, a pool, spa, gym, bar and conference centre, in the heart of Makhuduthamaga.
-        Rooms from {formatRand(cheapest)} a night.
       </p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href={url('/contact/#enquire')}>Check availability <Icon name="arrow" size={18} /></a>
-        <a class="btn btn-ghost" href={url('/accommodation/')}>View rooms & rates</a>
+      <div class="rise" style="--d: 3">
+        <BookingBar />
       </div>
+      <a class="rooms-link rise" style="--d: 4" href={url('/accommodation/')}>Or browse rooms & rates <Icon name="arrow" size={16} /></a>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Boeketlong at a glance">
+    <div class="container stats-grid">
+      {
+        stats.map((s, i) => (
+          <div class="stat" data-reveal style={`--i: ${i}`}>
+            <strong>
+              {s.prefix}
+              <span data-count={s.count ? s.value : undefined}>{s.count ? s.value.toLocaleString('en-US') : s.value}</span>
+            </strong>
+            <span>{s.label}</span>
+          </div>
+        ))
+      }
     </div>
   </section>
 
   <section class="section">
     <div class="container split">
-      <div>
+      <div data-reveal="left">
         <span class="eyebrow">Welcome</span>
-        <h2>A warm welcome in the heart of Sekhukhune</h2>
+        <h2>A warm welcome in the heart of <em>Sekhukhune</em></h2>
         <p>
           Boeketlong Lodge sits at the centre of Makhuduthamaga, an easy base for business, family visits and
           exploring the area around Jane Furse. Feel the warm northern sun and wide blue skies, then relax in
@@ -42,43 +68,61 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
           We opened in {site.history.opened} as {site.history.previousName} and became Boeketlong Lodge
           in {site.history.convertedToLodge}. We still welcome every guest personally.
         </p>
-        <a href={url('/about/')}>More about us</a>
+        <a class="text-link" href={url('/about/')}>Our story <Icon name="arrow" size={16} /></a>
       </div>
-      <Photo name="welcome" alt="Inside Boeketlong Lodge" sizes="(min-width: 900px) 560px, 100vw" class="rounded" aspect="4 / 3" />
+      <div class="frame" data-reveal="right">
+        <Photo name="welcome" alt="Inside Boeketlong Lodge" sizes="(min-width: 900px) 560px, 100vw" aspect="4 / 3" />
+      </div>
     </div>
   </section>
 
-  <section class="section section-sand">
+  <section class="section section-sand rooms" data-carousel>
     <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Accommodation</span>
-        <h2>Rooms and suites for every stay</h2>
-        <p class="lead">Every room sleeps two, or four in the Family Suite. Breakfast can be added to any room.</p>
+      <div class="rooms-head">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">Accommodation</span>
+          <h2>Rooms and suites for <em>every stay</em></h2>
+          <p class="lead">Every room sleeps two, or four in the Family Suite. Breakfast can be added to any room.</p>
+        </div>
+        <div class="arrows" data-reveal>
+          <button type="button" data-prev aria-label="Previous rooms"><Icon name="arrow" size={20} class="flip" /></button>
+          <button type="button" data-next aria-label="More rooms"><Icon name="arrow" size={20} /></button>
+        </div>
       </div>
-      <div class="grid grid-3">
-        {rooms.map((room) => <RoomCard room={room} />)}
-      </div>
+    </div>
+    <ul class="track" data-track>
+      {
+        rooms.map((room, i) => (
+          <li data-reveal style={`--i: ${Math.min(i, 3)}`}>
+            <RoomCard room={room} />
+          </li>
+        ))
+      }
+    </ul>
+    <div class="container">
+      <a class="btn btn-dark" href={url('/accommodation/')}>Compare all rates</a>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Facilities</span>
-        <h2>Everything you need, on site</h2>
+        <h2>Everything you need, <em>on site</em></h2>
       </div>
       <FacilityGrid />
     </div>
   </section>
 
   <section class="section band">
+    <Image src={crest} alt="" width={520} format="webp" class="watermark" />
     <div class="container band-inner">
-      <div>
+      <div data-reveal>
         <span class="eyebrow">Conferences & functions</span>
-        <h2>Planning a meeting, wedding or party?</h2>
+        <h2>Planning a meeting, <em>wedding</em> or party?</h2>
         <p>Host it at our conference centre, with accommodation, catering and the bar all in one place.</p>
       </div>
-      <div class="btn-row">
+      <div class="btn-row" data-reveal style="--i: 1">
         <a class="btn btn-primary" href={url('/facilities/conference-centre/')}>Conference centre</a>
         <a class="btn btn-ghost" href={whatsappLink('Hi Boeketlong Lodge, I would like a quote for a function.')} rel="noopener">
           Ask for a quote
@@ -89,9 +133,9 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
 
   <section class="section">
     <div class="container split">
-      <div>
+      <div data-reveal="left">
         <span class="eyebrow">Find us</span>
-        <h2>{site.address.street}, {site.address.town}</h2>
+        <h2>{site.address.street}, <em>{site.address.town}</em></h2>
         <p>Call, WhatsApp or email and we'll help with bookings, directions and anything else you need.</p>
         <div class="btn-row">
           <a class="btn btn-dark" href={site.mapsUrl} target="_blank" rel="noopener"><Icon name="pin" size={18} /> Get directions</a>
@@ -99,22 +143,30 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
           <a class="btn btn-ghost" href={`tel:${site.phones[0].tel}`}><Icon name="phone" size={18} /> {site.phones[0].display}</a>
         </div>
       </div>
-      <Photo name="exterior" alt="The lodge from outside" sizes="(min-width: 900px) 560px, 100vw" class="rounded" aspect="4 / 3" />
+      <div class="frame" data-reveal="right">
+        <Photo name="exterior" alt="The lodge from outside" sizes="(min-width: 900px) 560px, 100vw" aspect="4 / 3" />
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
+  /* ---------- Hero ---------- */
   .hero {
     position: relative;
     display: grid;
-    min-height: min(88svh, 820px);
+    grid-template-columns: minmax(0, 1fr);
+    min-height: max(100svh, 640px);
+    margin-top: calc(-1 * var(--header-h));
     color: var(--white);
     background: var(--ink);
     overflow: hidden;
   }
-  .hero > :global(*) {
+  .hero > * {
     grid-area: 1 / 1;
+  }
+  .hero-media {
+    overflow: hidden;
   }
   .hero :global(.hero-img) {
     width: 100%;
@@ -122,33 +174,117 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
     object-fit: cover;
   }
   .hero-shade {
+    /* Positioned so it paints above the transformed (zooming) photo. */
+    position: relative;
     background:
-      linear-gradient(0deg, rgb(20 17 12 / 0.9), rgb(20 17 12 / 0.7) 55%, rgb(20 17 12 / 0.2) 85%),
-      linear-gradient(90deg, rgb(20 17 12 / 0.55), transparent 70%);
+      linear-gradient(0deg, rgb(20 17 12 / 0.92), rgb(20 17 12 / 0.6) 50%, rgb(20 17 12 / 0.25) 80%, rgb(20 17 12 / 0.5)),
+      linear-gradient(90deg, rgb(20 17 12 / 0.5), transparent 70%);
   }
   .hero-content {
     position: relative;
     align-self: end;
-    padding-block: 120px clamp(48px, 9vw, 96px);
+    padding-block: calc(var(--header-h) + 80px) clamp(40px, 7vw, 80px);
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
   }
   .hero .eyebrow {
     color: #e3c55a;
   }
-  .hero-content {
-    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
-  }
   .hero h1 {
-    max-width: 12ch;
-    font-size: clamp(2.6rem, 8vw, 5rem);
+    font-size: clamp(3.2rem, 10vw, 6.8rem);
+    max-width: 14ch;
+    margin-bottom: 0.3em;
+  }
+  .hero h1 em {
+    color: #e3c55a;
   }
   .hero .lead {
+    color: rgb(255 255 255 / 0.88);
+    max-width: 46ch;
+    margin-bottom: 1.8rem;
+  }
+  .hero :global(.booking-bar) {
+    max-width: 900px;
+  }
+  .rooms-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
     color: rgb(255 255 255 / 0.85);
-    margin-bottom: 1.6rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .rooms-link:hover {
+    color: var(--white);
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    /* Slow "Ken Burns" drift on the hero photo. */
+    .hero :global(.hero-img) {
+      animation: drift 18s var(--ease-out) both;
+    }
+    /* Staggered entrance; ends fully visible even if animations don't run. */
+    .rise {
+      animation: rise 1s var(--ease-out) both;
+      animation-delay: calc(0.25s + var(--d, 0) * 0.12s);
+    }
+  }
+  @keyframes drift {
+    from {
+      transform: scale(1.14) translate3d(1.5%, 1%, 0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+
+  /* ---------- Stats ---------- */
+  .stats {
+    background: var(--ink);
+    color: rgb(255 255 255 / 0.7);
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 16px;
+    padding-block: clamp(32px, 5vw, 52px);
+  }
+  @media (min-width: 760px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .stat {
+    display: grid;
+    gap: 4px;
+    text-align: center;
+  }
+  .stat strong {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 1;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat > span {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Split sections ---------- */
   .split {
     display: grid;
-    gap: clamp(28px, 5vw, 64px);
+    gap: clamp(32px, 6vw, 80px);
     align-items: center;
   }
   @media (min-width: 900px) {
@@ -156,8 +292,39 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
       grid-template-columns: 1fr 1fr;
     }
   }
-  .split :global(.rounded) {
+  .frame {
+    position: relative;
+  }
+  .frame::before {
+    /* Offset gold outline behind the photo. */
+    content: '';
+    position: absolute;
+    inset: 12px -10px -12px 12px;
+    border: 1.5px solid var(--gold);
     border-radius: var(--radius);
+  }
+  @media (min-width: 900px) {
+    .frame::before {
+      inset: 18px -18px -18px 18px;
+    }
+  }
+  .frame :global(.photo) {
+    position: relative;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .text-link :global(.icon) {
+    transition: transform 0.3s var(--ease-out);
+  }
+  .text-link:hover :global(.icon) {
+    transform: translateX(4px);
   }
   .split .btn-row {
     margin-top: 1.2rem;
@@ -166,9 +333,91 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
     color: var(--ink);
   }
 
+  /* ---------- Rooms carousel ---------- */
+  .rooms-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .arrows {
+    display: none;
+    gap: 10px;
+    margin-bottom: clamp(28px, 5vw, 48px);
+  }
+  @media (min-width: 760px) {
+    .arrows {
+      display: flex;
+    }
+  }
+  .arrows button {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      opacity 0.2s;
+  }
+  .arrows button:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--white);
+  }
+  .arrows button:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .arrows :global(.flip) {
+    transform: rotate(180deg);
+  }
+  .track {
+    --edge: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 6px var(--edge) 24px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(84%, 360px);
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+  .track > li {
+    scroll-snap-align: start;
+    display: flex;
+  }
+  .track :global(.room) {
+    width: 100%;
+  }
+
+  /* ---------- Conference band ---------- */
   .band {
+    position: relative;
+    overflow: hidden;
     background: var(--ink);
     color: rgb(255 255 255 / 0.85);
+  }
+  .band :global(.watermark) {
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    width: min(520px, 70vw);
+    height: auto;
+    transform: translateY(-50%);
+    opacity: 0.06;
+    pointer-events: none;
   }
   .band h2 {
     color: var(--white);
@@ -177,6 +426,7 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
     color: var(--gold);
   }
   .band-inner {
+    position: relative;
     display: grid;
     gap: 24px;
     align-items: center;

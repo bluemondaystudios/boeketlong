@@ -85,8 +85,13 @@ import { site, rooms, whatsappLink, formatRand } from '../data/site';
   const checkout = form.elements.namedItem('checkout') as HTMLInputElement;
 
   // Pre-select the room when arriving from a room page (?room=slug).
-  const wanted = new URLSearchParams(location.search).get('room');
-  if (wanted) (form.elements.namedItem('room') as HTMLSelectElement).value = wanted;
+  // Pre-fill from a room page (?room=) or the homepage booking bar (?checkin=&checkout=&guests=).
+  const params = new URLSearchParams(location.search);
+  for (const field of ['room', 'checkin', 'checkout', 'guests']) {
+    const value = params.get(field);
+    const input = form.elements.namedItem(field) as HTMLInputElement | HTMLSelectElement | null;
+    if (value && input) input.value = value;
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   checkin.min = today;

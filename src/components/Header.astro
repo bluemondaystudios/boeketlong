@@ -14,11 +14,16 @@ const links = [
   { href: '/contact/', label: 'Contact' },
 ];
 
+interface Props {
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
+
 const path = unbase(Astro.url.pathname);
 const isCurrent = (href: string) => path === href || path.startsWith(href);
 ---
 
-<header class="site-header">
+<header class:list={['site-header', { overlay }]}>
   <div class="container bar">
     <a class="brand" href={url('/')} aria-label={`${site.name} home`}>
       <Image src={crest} alt="" height={40} densities={[1, 2]} format="webp" loading="eager" class="crest" />
@@ -67,12 +72,25 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     background: rgb(31 27 20 / 0.96);
     color: var(--white);
     backdrop-filter: blur(8px);
+    view-transition-name: site-header;
+    transition:
+      background-color 0.35s,
+      backdrop-filter 0.35s,
+      box-shadow 0.35s;
+  }
+  .site-header.scrolled {
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+  }
+  /* Transparent over the hero until the visitor scrolls (needs JS to un-set). */
+  :global(.js) .overlay:not(.scrolled):not(:has(details[open])) {
+    background: linear-gradient(180deg, rgb(20 17 12 / 0.8), rgb(20 17 12 / 0.35) 70%, transparent);
+    backdrop-filter: none;
   }
   .bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 68px;
+    min-height: var(--header-h);
   }
   .brand {
     display: flex;
@@ -124,8 +142,32 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
     text-decoration: none;
     font-weight: 600;
   }
+  .nav-desktop a:not(.btn) {
+    position: relative;
+    padding-block: 6px;
+  }
+  .nav-desktop a:not(.btn)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .nav-desktop a:not(.btn):hover::after,
+  .nav-desktop a[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
   .nav-desktop a:not(.btn):hover,
   [aria-current='page'] {
+    color: var(--white) !important;
+  }
+  .nav-mobile [aria-current='page'] {
     color: var(--gold) !important;
   }
   .nav-desktop .btn {

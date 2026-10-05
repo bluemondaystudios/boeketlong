@@ -4,6 +4,7 @@
 // labelled with the filename it is waiting for.
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import crest from '../assets/brand/crest.png';
 
 interface Props {
   name: string;
@@ -53,7 +54,8 @@ const src = key ? (await files[key]()).default : undefined;
       role="img"
       aria-label={alt}
     >
-      <span>{name}.jpg</span>
+      <Image src={crest} alt="" width={120} format="webp" class="ph-crest" />
+      <span class="ph-name">Photo to come · {name}.jpg</span>
     </div>
   )
 }
@@ -66,16 +68,27 @@ const src = key ? (await files[key]()).default : undefined;
     object-fit: cover;
   }
   .photo-placeholder {
+    position: relative;
     display: grid;
     place-items: center;
+    overflow: hidden;
     background:
-      radial-gradient(circle at 30% 20%, rgb(192 159 43 / 0.35), transparent 60%),
-      linear-gradient(135deg, #2d2a24, #4a3f2a);
-    color: rgb(255 255 255 / 0.55);
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
+      radial-gradient(120% 90% at 20% 10%, rgb(192 159 43 / 0.28), transparent 60%),
+      repeating-linear-gradient(45deg, rgb(255 255 255 / 0.025) 0 2px, transparent 2px 14px),
+      linear-gradient(150deg, #2b2620, #3d3424 60%, #2b2620);
+    color: rgb(255 255 255 / 0.5);
+  }
+  .photo-placeholder :global(.ph-crest) {
+    width: min(32%, 120px);
+    height: auto;
+    opacity: 0.22;
+  }
+  .ph-name {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
     overflow-wrap: anywhere;
-    text-align: center;
-    padding: 8px;
   }
 </style>

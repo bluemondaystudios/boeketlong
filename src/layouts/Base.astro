@@ -2,6 +2,7 @@
 import { url, unbase } from '../lib/url';
 import '../styles/global.css';
 import fontUrl from '@fontsource-variable/raleway/files/raleway-latin-wght-normal.woff2?url';
+import serifUrl from '@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ContactBar from '../components/ContactBar.astro';
@@ -14,9 +15,11 @@ interface Props {
   ogImage?: string;
   /** Extra JSON-LD objects for this page. */
   schema?: Record<string, unknown>[];
+  /** Let the header sit transparently over a full-bleed hero photo. */
+  overlayHeader?: boolean;
 }
 
-const { title, description = site.description, ogImage = '/og-image.jpg', schema = [] } = Astro.props;
+const { title, description = site.description, ogImage = '/og-image.jpg', schema = [], overlayHeader = false } = Astro.props;
 const canonical = new URL(unbase(Astro.url.pathname), site.url).href;
 const fullTitle = title === site.name ? `${site.name} | Accommodation in Jane Furse` : `${title} | ${site.name}`;
 
@@ -53,11 +56,19 @@ const lodging = {
 <html lang="en-ZA">
   <head>
     <meta charset="utf-8" />
+    <script is:inline>
+      // Lets CSS hide reveal-on-scroll content only when JS is running, with a failsafe.
+      document.documentElement.classList.add('js');
+      setTimeout(() => {
+        if (!document.documentElement.classList.contains('motion-ready')) document.documentElement.classList.add('reveal-all');
+      }, 2500);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={serifUrl} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={url('/favicon.png')} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
     <meta name="theme-color" content="#1f1b14" />
@@ -76,11 +87,14 @@ const lodging = {
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
+    <Header overlay={overlayHeader} />
     <main id="main">
       <slot />
     </main>
     <Footer />
     <ContactBar />
+    <script>
+      import '../scripts/motion';
+    </script>
   </body>
 </html>

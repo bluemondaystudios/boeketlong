@@ -1,0 +1,110 @@
+---
+// Hotel-style availability bar. A plain GET form to the contact page, which
+// pre-fills its enquiry form from these fields, so it works without JavaScript.
+import { url } from '../lib/url';
+import Icon from './Icon.astro';
+---
+
+<form class="booking-bar" action={url('/contact/#enquire')} method="get" aria-label="Check availability">
+  <label>
+    <span>Check-in</span>
+    <input type="date" name="checkin" required />
+  </label>
+  <label>
+    <span>Check-out</span>
+    <input type="date" name="checkout" required />
+  </label>
+  <label class="guests">
+    <span>Guests</span>
+    <select name="guests">
+      {[1, 2, 3, 4, 5, 6].map((n) => <option value={n} selected={n === 2}>{n}</option>)}
+    </select>
+  </label>
+  <button class="btn btn-primary" type="submit">Check availability <Icon name="arrow" size={18} /></button>
+</form>
+
+<script>
+  // Sensible date limits: no past check-ins, check-out after check-in.
+  document.querySelectorAll<HTMLFormElement>('.booking-bar').forEach((form) => {
+    const inEl = form.elements.namedItem('checkin') as HTMLInputElement;
+    const outEl = form.elements.namedItem('checkout') as HTMLInputElement;
+    const iso = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    inEl.min = iso(new Date());
+    inEl.addEventListener('change', () => {
+      if (!inEl.value) return;
+      const next = new Date(inEl.value);
+      next.setDate(next.getDate() + 1);
+      outEl.min = iso(next);
+      if (!outEl.value || outEl.value <= inEl.value) outEl.value = iso(next);
+    });
+  });
+</script>
+
+<style>
+  .booking-bar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px;
+    border-radius: 18px;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.22);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    box-shadow: 0 20px 50px rgb(0 0 0 / 0.25);
+    text-shadow: none;
+  }
+  label {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--ink);
+  }
+  label span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+  }
+  input,
+  select {
+    font: inherit;
+    font-weight: 600;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--ink);
+    min-height: 28px;
+    width: 100%;
+    min-width: 0;
+  }
+  input:focus,
+  select:focus {
+    outline: none;
+  }
+  label:focus-within {
+    box-shadow: 0 0 0 3px var(--gold);
+  }
+  .guests,
+  .btn {
+    grid-column: 1 / -1;
+    min-height: 56px;
+    border-radius: 12px;
+  }
+  @media (min-width: 760px) {
+    .booking-bar {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.6fr) auto;
+      align-items: stretch;
+    }
+    .guests,
+    .btn {
+      grid-column: auto;
+      min-height: 0;
+      padding-inline: 1.6em;
+    }
+  }
+</style>

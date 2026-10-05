@@ -33,16 +33,23 @@ const { room } = Astro.props;
   .room {
     display: flex;
     flex-direction: column;
+    transition:
+      transform 0.45s var(--ease-out),
+      box-shadow 0.45s var(--ease-out);
+  }
+  .room:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 48px rgb(31 27 20 / 0.14);
   }
   .media {
     display: block;
     overflow: hidden;
   }
   .media :global(.photo) {
-    transition: transform 0.4s;
+    transition: transform 0.9s var(--ease-out);
   }
   .room:hover .media :global(.photo) {
-    transform: scale(1.04);
+    transform: scale(1.06);
   }
   .body {
     padding: 22px 24px 24px;
@@ -88,7 +95,9 @@ const { room } = Astro.props;
     font-size: 0.9rem;
   }
   .price strong {
+    font-family: var(--serif);
+    font-weight: 600;
     color: var(--ink);
-    font-size: 1.5rem;
+    font-size: 1.9rem;
   }
 </style>
