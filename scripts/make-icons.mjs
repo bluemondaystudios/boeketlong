@@ -1,16 +1,31 @@
-// Regenerates public/apple-touch-icon.png and a fallback public/og-image.jpg.
-// Replace og-image.jpg with a real 1200x630 photo of the lodge when available.
+// Regenerates the favicon, Apple touch icon and social sharing image from the
+// logo and the hero photo. Run with `node scripts/make-icons.mjs`.
 import sharp from 'sharp';
 
-const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" fill="#1f1b14"/><text x="90" y="126" font-family="Georgia, serif" font-size="112" font-weight="700" fill="#c09f2b" text-anchor="middle">B</text></svg>`;
-await sharp(Buffer.from(icon)).png().toFile('public/apple-touch-icon.png');
+const ink = '#1f1b14';
+const crest = 'src/assets/brand/crest.png';
+const logo = 'src/assets/brand/logo.png';
 
-const og = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <defs><radialGradient id="g" cx="85%" cy="0%" r="80%"><stop offset="0" stop-color="#c09f2b" stop-opacity=".45"/><stop offset="1" stop-color="#1f1b14" stop-opacity="0"/></radialGradient></defs>
-  <rect width="1200" height="630" fill="#1f1b14"/><rect width="1200" height="630" fill="url(#g)"/>
-  <text x="80" y="300" font-family="Helvetica, Arial, sans-serif" font-size="96" font-weight="800" fill="#fff">Boeketlong Lodge</text>
-  <text x="84" y="370" font-family="Helvetica, Arial, sans-serif" font-size="36" fill="#c09f2b" letter-spacing="6">JANE FURSE · SEKHUKHUNE · LIMPOPO</text>
-  <text x="84" y="470" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="#ffffffcc">Rooms &amp; suites from R750 · Spa · Pool · Conferences</text>
-</svg>`;
-await sharp(Buffer.from(og)).jpeg({ quality: 85 }).toFile('public/og-image.jpg');
+async function icon(size, file) {
+  const inner = Math.round(size * 0.78);
+  const mark = await sharp(crest).resize({ width: inner, height: inner, fit: 'inside' }).toBuffer();
+  await sharp({ create: { width: size, height: size, channels: 4, background: ink } })
+    .composite([{ input: mark, gravity: 'center' }])
+    .png()
+    .toFile(file);
+}
+await icon(64, 'public/favicon.png');
+await icon(180, 'public/apple-touch-icon.png');
+
+// 1200x630 sharing image: hero photo, darkened on the left, with the logo.
+const shade = Buffer.from(
+  `<svg width="1200" height="630"><defs><linearGradient id="g"><stop offset="0" stop-color="${ink}" stop-opacity=".92"/><stop offset=".55" stop-color="${ink}" stop-opacity=".55"/><stop offset="1" stop-color="${ink}" stop-opacity="0"/></linearGradient></defs><rect width="1200" height="630" fill="url(#g)"/></svg>`,
+);
+const mark = await sharp(logo).resize({ height: 400 }).toBuffer();
+await sharp('src/assets/photos/hero.jpg')
+  .resize(1200, 630, { fit: 'cover' })
+  .composite([{ input: shade }, { input: mark, left: 90, top: 115 }])
+  .jpeg({ quality: 82, mozjpeg: true })
+  .toFile('public/og-image.jpg');
+
 console.log('icons written');

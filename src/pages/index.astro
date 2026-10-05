@@ -11,7 +11,7 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
 
 <Base title={site.name}>
   <section class="hero">
-    <Photo name="hero" alt="Boeketlong Lodge" sizes="100vw" widths={[640, 960, 1440, 1920]} priority aspect="auto" class="hero-img" />
+    <Photo name="hero" alt="The reception lounge at Boeketlong Lodge" sizes="100vw" widths={[640, 960, 1440, 1920]} priority aspect="auto" class="hero-img" />
     <div class="hero-shade"></div>
     <div class="container hero-content">
       <span class="eyebrow">Jane Furse · Sekhukhune · Limpopo</span>
@@ -121,8 +121,9 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
     object-fit: cover;
   }
   .hero-shade {
-    background: linear-gradient(90deg, rgb(20 17 12 / 0.85), rgb(20 17 12 / 0.35) 70%, transparent),
-      linear-gradient(0deg, rgb(20 17 12 / 0.6), transparent 40%);
+    background:
+      linear-gradient(0deg, rgb(20 17 12 / 0.9), rgb(20 17 12 / 0.7) 55%, rgb(20 17 12 / 0.2) 85%),
+      linear-gradient(90deg, rgb(20 17 12 / 0.55), transparent 70%);
   }
   .hero-content {
     position: relative;
@@ -130,7 +131,10 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
     padding-block: 120px clamp(48px, 9vw, 96px);
   }
   .hero .eyebrow {
-    color: var(--gold);
+    color: #e3c55a;
+  }
+  .hero-content {
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
   }
   .hero h1 {
     max-width: 12ch;

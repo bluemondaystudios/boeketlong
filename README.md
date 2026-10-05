@@ -37,7 +37,7 @@ Put the original, full-size JPGs in `src/assets/photos/` using **exactly** these
 
 | File | Used on |
 | --- | --- |
-| `hero.jpg` | Homepage banner (landscape, at least 1920px wide) |
+| `hero.jpg` | Homepage banner. Currently the reception lounge; swap in a stronger shot, such as the pool or exterior, if there is one |
 | `welcome.jpg`, `exterior.jpg` | Homepage |
 | `about.jpg` | About page (portrait) |
 | `economy-room.jpg`, `standard-room.jpg`, `deluxe-room.jpg`, `luxury-suite.jpg`, `family-suite.jpg`, `presidential-suite.jpg` | Room cards and room pages |
@@ -46,7 +46,9 @@ Put the original, full-size JPGs in `src/assets/photos/` using **exactly** these
 
 Gallery photos go in `src/assets/gallery/`. Every image there is shown automatically, sorted by filename. The filename becomes the image description, so `03-pool-at-sunset.jpg` is described as "pool at sunset".
 
-Replace `public/og-image.jpg` (the image shown when the site is shared on WhatsApp or Facebook) with a 1200×630 photo of the lodge.
+The logo lives in `src/assets/brand/`: `logo.png` is the full logo with stars, used in the footer, and `crest.png` is the crest only, used in the header. The logo is white, so it only works on dark backgrounds. A larger or vector (SVG) version would look sharper on high-resolution screens.
+
+After changing the logo or `hero.jpg`, run `node scripts/make-icons.mjs` to regenerate the favicon, the Apple touch icon and `public/og-image.jpg` (the preview image shown when the site is shared on WhatsApp or Facebook).
 
 ## Hosting
 
@@ -61,6 +63,7 @@ Recommended host: **Cloudflare Pages** (free, with a Johannesburg data centre). 
 ## Before launch
 
 - [ ] Add the photos (see above). The old site's photos are in its `/uploads/images/` folder on the current host.
+- [ ] The logo shows four Tourism Grading Council stars. If the grading is current, say "4-star graded" in the copy and structured data too (it's a strong selling point). If it has lapsed, take the stars off the logo.
 - [ ] Check the rates in `src/data/site.ts` are still current.
 - [ ] Confirm the Facebook URL. It's spelled `BoiketlongLodgeAndPub`, while the lodge name is Boeketlong.
 - [ ] Add facility details (conference capacity, spa treatments, gym hours) in `src/data/facility-pages.ts`.
