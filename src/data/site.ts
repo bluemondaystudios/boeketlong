@@ -5,11 +5,9 @@
 export const site = {
   name: 'Boeketlong Lodge',
   tagline: 'Make yourself at home',
-  /** Tourism Grading Council of South Africa star grading. */
-  stars: 4,
   url: 'https://www.boeketlong.co.za',
   description:
-    '4-star graded Boeketlong Lodge in Jane Furse, Sekhukhune: suites and rooms from R750 a night, with a pool, spa, gym, bar, restaurant and conference centre.',
+    'Boeketlong Lodge in Jane Furse, Sekhukhune: suites and rooms from R750 a night, with a pool, spa, gym, bar, restaurant and conference centre.',
   address: {
     street: '5050 Mogoroane, Ga-Moloi',
     town: 'Jane Furse',
