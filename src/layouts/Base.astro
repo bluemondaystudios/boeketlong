@@ -1,4 +1,5 @@
 ---
+import { url, unbase } from '../lib/url';
 import '../styles/global.css';
 import fontUrl from '@fontsource-variable/raleway/files/raleway-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
@@ -16,8 +17,8 @@ interface Props {
 }
 
 const { title, description = site.description, ogImage = '/og-image.jpg', schema = [] } = Astro.props;
-const canonical = new URL(Astro.url.pathname, site.url).href;
-const fullTitle = title === site.name ? `${site.name} | Accommodation in Jane Furse` : `${title} | ${site.name}`;
+const canonical = new URL(unbase(Astro.url.pathname), site.url).href;
+const fullTitle = title === site.name ? `${site.name} | 4-Star Accommodation in Jane Furse` : `${title} | ${site.name}`;
 
 const lodging = {
   '@context': 'https://schema.org',
@@ -44,6 +45,7 @@ const lodging = {
     name: f.name,
     value: true,
   })),
+  starRating: { '@type': 'Rating', ratingValue: site.stars, author: { '@type': 'Organization', name: 'Tourism Grading Council of South Africa' } },
   sameAs: [site.facebook],
 };
 ---
@@ -57,10 +59,10 @@ const lodging = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="icon" href="/favicon.png" type="image/png" sizes="64x64" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href={url('/favicon.png')} type="image/png" sizes="64x64" />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
     <meta name="theme-color" content="#1f1b14" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />

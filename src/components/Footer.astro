@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import logo from '../assets/brand/logo.png';
@@ -49,19 +50,19 @@ const year = new Date().getFullYear();
     <div>
       <h2>Explore</h2>
       <ul class="links">
-        <li><a href="/accommodation/">Accommodation</a></li>
-        <li><a href="/facilities/">Facilities</a></li>
-        <li><a href="/facilities/conference-centre/">Conferences & functions</a></li>
-        <li><a href="/gallery/">Gallery</a></li>
-        <li><a href="/about/">About us</a></li>
-        <li><a href="/contact/">Contact & directions</a></li>
+        <li><a href={url('/accommodation/')}>Accommodation</a></li>
+        <li><a href={url('/facilities/')}>Facilities</a></li>
+        <li><a href={url('/facilities/conference-centre/')}>Conferences & functions</a></li>
+        <li><a href={url('/gallery/')}>Gallery</a></li>
+        <li><a href={url('/about/')}>About us</a></li>
+        <li><a href={url('/contact/')}>Contact & directions</a></li>
       </ul>
     </div>
   </div>
 
   <div class="container legal">
     <p>© {year} {site.name}. All rights reserved.</p>
-    <p><a href="/privacy/">Privacy policy</a> · <a href="/terms/">Terms</a></p>
+    <p><a href={url('/privacy/')}>Privacy policy</a> · <a href={url('/terms/')}>Terms</a></p>
   </div>
 </footer>
 

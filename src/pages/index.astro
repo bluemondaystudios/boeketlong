@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import Photo from '../components/Photo.astro';
 import RoomCard from '../components/RoomCard.astro';
@@ -14,15 +15,15 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
     <Photo name="hero" alt="The reception lounge at Boeketlong Lodge" sizes="100vw" widths={[640, 960, 1440, 1920]} priority aspect="auto" class="hero-img" />
     <div class="hero-shade"></div>
     <div class="container hero-content">
-      <span class="eyebrow">Jane Furse · Sekhukhune · Limpopo</span>
+      <span class="eyebrow">{site.stars}-star graded · Jane Furse · Limpopo</span>
       <h1>Make yourself at home</h1>
       <p class="lead">
         Elegant rooms, a pool, spa, gym, bar and conference centre, in the heart of Makhuduthamaga.
         Rooms from {formatRand(cheapest)} a night.
       </p>
       <div class="btn-row">
-        <a class="btn btn-primary" href="/contact/#enquire">Check availability <Icon name="arrow" size={18} /></a>
-        <a class="btn btn-ghost" href="/accommodation/">View rooms & rates</a>
+        <a class="btn btn-primary" href={url('/contact/#enquire')}>Check availability <Icon name="arrow" size={18} /></a>
+        <a class="btn btn-ghost" href={url('/accommodation/')}>View rooms & rates</a>
       </div>
     </div>
   </section>
@@ -41,7 +42,7 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
           We opened in {site.history.opened} as {site.history.previousName} and became Boeketlong Lodge
           in {site.history.convertedToLodge}. We still welcome every guest personally.
         </p>
-        <a href="/about/">More about us</a>
+        <a href={url('/about/')}>More about us</a>
       </div>
       <Photo name="welcome" alt="Inside Boeketlong Lodge" sizes="(min-width: 900px) 560px, 100vw" class="rounded" aspect="4 / 3" />
     </div>
@@ -78,7 +79,7 @@ const cheapest = Math.min(...rooms.map((r) => r.from));
         <p>Host it at our conference centre, with accommodation, catering and the bar all in one place.</p>
       </div>
       <div class="btn-row">
-        <a class="btn btn-primary" href="/facilities/conference-centre/">Conference centre</a>
+        <a class="btn btn-primary" href={url('/facilities/conference-centre/')}>Conference centre</a>
         <a class="btn btn-ghost" href={whatsappLink('Hi Boeketlong Lodge, I would like a quote for a function.')} rel="noopener">
           Ask for a quote
         </a>

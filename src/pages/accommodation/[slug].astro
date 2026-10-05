@@ -1,4 +1,5 @@
 ---
+import { url } from '../../lib/url';
 import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import Photo from '../../components/Photo.astro';
@@ -45,7 +46,7 @@ const schema = {
       </div>
 
       <div class="details">
-        <a class="back" href="/accommodation/">← All rooms</a>
+        <a class="back" href={url('/accommodation/')}>← All rooms</a>
         <h1>{room.name}</h1>
         <p class="lead">{room.summary}</p>
 
@@ -61,7 +62,7 @@ const schema = {
             {room.breakfastIncluded ? 'Breakfast for two included' : `${formatRand(room.withBreakfast!)} / night with breakfast`}
           </p>
           <div class="btn-row">
-            <a class="btn btn-primary" href={`/contact/?room=${room.slug}#enquire`}>Book this room</a>
+            <a class="btn btn-primary" href={url(`/contact/?room=${room.slug}#enquire`)}>Book this room</a>
             <a class="btn btn-whatsapp" href={whatsappLink(enquiry)} rel="noopener"><Icon name="whatsapp" size={18} /> WhatsApp</a>
           </div>
           <p class="call">Or call <a href={`tel:${site.phones[0].tel}`}>{site.phones[0].display}</a></p>

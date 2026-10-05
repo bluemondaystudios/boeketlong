@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Photo from '../components/Photo.astro';
@@ -23,12 +24,15 @@ import { site } from '../data/site';
           rooms and enjoy the pool, spa, salon, gym, bar and restaurant without leaving the lodge.
         </p>
         <p>
+          Boeketlong is a {site.stars}-star graded lodge, assessed by the Tourism Grading Council of South Africa.
+        </p>
+        <p>
           A personal, handwritten note of welcome is how we greet our guests, and it says a lot about the way
           we run the lodge: every guest should feel at home.
         </p>
         <div class="btn-row">
-          <a class="btn btn-primary" href="/accommodation/">See our rooms</a>
-          <a class="btn btn-ghost" href="/contact/">Contact us</a>
+          <a class="btn btn-primary" href={url('/accommodation/')}>See our rooms</a>
+          <a class="btn btn-ghost" href={url('/contact/')}>Contact us</a>
         </div>
       </div>
       <Photo name="about" alt="Boeketlong Lodge" sizes="(min-width: 900px) 560px, 100vw" priority class="rounded" aspect="4 / 5" />

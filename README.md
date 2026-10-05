@@ -52,6 +52,12 @@ After changing the logo or `hero.jpg`, run `node scripts/make-icons.mjs` to rege
 
 ## Hosting
 
+### GitHub Pages (current preview)
+
+`.github/workflows/deploy.yml` builds and deploys the site on every push. In the repo's **Settings → Pages**, set **Source** to **GitHub Actions**. The "Deploy from a branch" option runs Jekyll, which can't build this site. The preview is served at `https://bluemondaystudios.github.io/boeketlong/`. If you later add `www.boeketlong.co.za` as a custom domain in the same settings, the workflow builds for the root automatically.
+
+### Cloudflare Pages (recommended for launch)
+
 Recommended host: **Cloudflare Pages** (free, with a Johannesburg data centre). Connect this repo, then set:
 
 - Build command: `npm run build`
@@ -63,7 +69,6 @@ Recommended host: **Cloudflare Pages** (free, with a Johannesburg data centre). 
 ## Before launch
 
 - [ ] Add the photos (see above). The old site's photos are in its `/uploads/images/` folder on the current host.
-- [ ] The logo shows four Tourism Grading Council stars. If the grading is current, say "4-star graded" in the copy and structured data too (it's a strong selling point). If it has lapsed, take the stars off the logo.
 - [ ] Check the rates in `src/data/site.ts` are still current.
 - [ ] Confirm the Facebook URL. It's spelled `BoiketlongLodgeAndPub`, while the lodge name is Boeketlong.
 - [ ] Add facility details (conference capacity, spa treatments, gym hours) in `src/data/facility-pages.ts`.
