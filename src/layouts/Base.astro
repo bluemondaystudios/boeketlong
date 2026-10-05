@@ -59,6 +59,11 @@ const lodging = {
     <script is:inline>
       // Lets CSS hide reveal-on-scroll content only when JS is running, with a failsafe.
       document.documentElement.classList.add('js');
+      // Apply a saved light/dark choice before first paint, so there is no flash.
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
       setTimeout(() => {
         if (!document.documentElement.classList.contains('motion-ready')) document.documentElement.classList.add('reveal-all');
       }, 2500);
@@ -71,7 +76,8 @@ const lodging = {
     <link rel="preload" href={serifUrl} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={url('/favicon.png')} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
-    <meta name="theme-color" content="#1f1b14" />
+    <meta name="theme-color" content="#1f1b14" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0c08" media="(prefers-color-scheme: dark)" />
     <link rel="sitemap" href={url('/sitemap-index.xml')} />
 
     <meta property="og:type" content="website" />

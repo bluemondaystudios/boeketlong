@@ -3,16 +3,28 @@
 @import '@fontsource-variable/cormorant-garamond/wght-italic.css';
 
 :root {
+  /* Brand colours: the same in both themes. */
   --gold: #c09f2b;
-  --gold-dark: #7d6514;
-  --ink: #1f1b14;
+  --night: #1f1b14; /* Header, footer, bands: always dark. */
+  --on-gold: #1f1b14; /* Text on gold buttons. */
+  --white: #fff; /* Text on night surfaces. */
+
+  /* Theme colours: light by default, swapped for dark below. */
+  color-scheme: light;
+  --gold-dark: #7d6514; /* Gold for text and links on the page background. */
+  --ink: #1f1b14; /* Body text. */
   --ink-soft: #4b4538;
-  --cream: #faf7f0;
-  --sand: #f1ebdc;
+  --cream: #faf7f0; /* Page background. */
+  --sand: #f1ebdc; /* Alternate section background. */
+  --surface: #fff; /* Cards and form fields. */
   --line: #e2d9c4;
-  --white: #fff;
+  --shadow-rgb: 31 27 20;
+  --shadow-a: 0.08;
+  --sun: none; /* Which theme-toggle icon to show. */
+  --moon: block;
+
   --radius: 14px;
-  --shadow: 0 10px 30px rgb(31 27 20 / 0.08);
+  --shadow: 0 10px 30px rgb(var(--shadow-rgb) / var(--shadow-a));
   --max: 1180px;
   --gutter: clamp(16px, 4vw, 40px);
   --font: 'Raleway Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -20,6 +32,39 @@
   --bar-h: 0px;
   --header-h: 72px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --night: #0e0c08;
+    --gold-dark: #dcbb52;
+    --ink: #f2ecdf;
+    --ink-soft: #c3b9a4;
+    --cream: #16130e;
+    --sand: #1d1912;
+    --surface: #241f17;
+    --line: #3a3125;
+    --shadow-rgb: 0 0 0;
+    --shadow-a: 0.35;
+    --sun: block;
+    --moon: none;
+  }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --night: #0e0c08;
+  --gold-dark: #dcbb52;
+  --ink: #f2ecdf;
+  --ink-soft: #c3b9a4;
+  --cream: #16130e;
+  --sand: #1d1912;
+  --surface: #241f17;
+  --line: #3a3125;
+  --shadow-rgb: 0 0 0;
+  --shadow-a: 0.35;
+  --sun: block;
+  --moon: none;
 }
 
 *,
@@ -46,6 +91,9 @@ body {
   line-height: 1.65;
   color: var(--ink);
   background: var(--cream);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   padding-bottom: var(--bar-h);
   font-variant-numeric: lining-nums;
   /* Slide-in start positions must never cause sideways scrolling. */
@@ -172,20 +220,21 @@ a:hover {
 
 .btn-primary {
   background: var(--gold);
-  color: var(--ink);
+  color: var(--on-gold);
 }
 .btn-primary:hover {
   background: #d4b33d;
-  color: var(--ink);
+  color: var(--on-gold);
 }
 
+/* Inverts with the theme: dark button on light pages, light button on dark. */
 .btn-dark {
   background: var(--ink);
-  color: var(--white);
+  color: var(--cream);
 }
 .btn-dark:hover {
-  background: #3a3326;
-  color: var(--white);
+  background: color-mix(in srgb, var(--ink) 82%, var(--cream));
+  color: var(--cream);
 }
 
 .btn-ghost {
@@ -234,7 +283,7 @@ a:hover {
 }
 
 .card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -262,7 +311,7 @@ a:hover {
   left: 12px;
   top: -60px;
   z-index: 100;
-  background: var(--ink);
+  background: var(--night);
   color: var(--white);
   padding: 10px 16px;
   border-radius: 8px;

@@ -39,7 +39,7 @@ const { room } = Astro.props;
   }
   .room:hover {
     transform: translateY(-6px);
-    box-shadow: 0 22px 48px rgb(31 27 20 / 0.14);
+    box-shadow: 0 22px 48px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * 1.8));
   }
   .media {
     display: block;

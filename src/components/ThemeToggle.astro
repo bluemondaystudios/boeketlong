@@ -1,0 +1,71 @@
+---
+// Light/dark switch. With no saved choice the site follows the device setting;
+// a click saves the opposite of whatever is showing. Hidden without JavaScript.
+import Icon from './Icon.astro';
+---
+
+<button class="theme-toggle" type="button" aria-label="Switch between light and dark mode" title="Light / dark mode">
+  <span class="moon"><Icon name="moon" size={20} /></span>
+  <span class="sun"><Icon name="sun" size={20} /></span>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const isDark = () =>
+    root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const apply = () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* Private mode: the choice just lasts for this page. */
+    }
+  };
+
+  document.querySelectorAll('.theme-toggle').forEach((button) =>
+    button.addEventListener('click', () => {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (document.startViewTransition && !reduce) document.startViewTransition(apply);
+      else apply();
+    }),
+  );
+</script>
+
+<style>
+  .theme-toggle {
+    display: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    background: transparent;
+    color: var(--white);
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      transform 0.4s var(--ease-out);
+  }
+  :global(.js) .theme-toggle {
+    display: grid;
+  }
+  .theme-toggle:hover {
+    background: rgb(255 255 255 / 0.1);
+    border-color: var(--gold);
+    transform: rotate(-15deg);
+  }
+  .moon {
+    display: var(--moon);
+  }
+  .sun {
+    display: var(--sun);
+    color: var(--gold);
+  }
+  .moon,
+  .sun {
+    line-height: 0;
+  }
+</style>

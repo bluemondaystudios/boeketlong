@@ -36,7 +36,7 @@ import { facilities } from '../data/site';
   }
   li:hover {
     transform: translateY(-4px);
-    box-shadow: 0 18px 40px rgb(31 27 20 / 0.12);
+    box-shadow: 0 18px 40px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * 1.6));
   }
   .badge {
     display: inline-grid;
@@ -54,7 +54,7 @@ import { facilities } from '../data/site';
   }
   li:hover .badge {
     background: var(--gold);
-    color: var(--ink);
+    color: var(--on-gold);
     transform: rotate(-8deg) scale(1.06);
   }
   h3 {
